@@ -23,7 +23,6 @@ services:
      - "4443"
     networks:
      - back
-
    
   ldap:
     build: ./ldap/
@@ -32,13 +31,6 @@ services:
 
   sp:
     build: ./sp/ 
-    networks:
-     - back
-
-  php-cas:
-    build: ./php-cas/
-    links:
-      - httpd-proxy:idptestbed
     networks:
      - back
 

@@ -1,3 +1,4 @@
+# FROM dockerizedidptestbed_sp:latest
 FROM jtgasper3/centos-shibboleth-sp
 
 RUN yum -y update \

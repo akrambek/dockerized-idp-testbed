@@ -1,3 +1,4 @@
+# FROM dockerizedidptestbed_httpd-proxy:latest
 FROM centos:centos7
 
 RUN yum -y update \

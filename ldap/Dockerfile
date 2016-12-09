@@ -1,3 +1,4 @@
+# FROM dockerizedidptestbed_ldap:latest
 FROM centos:centos6
 
 MAINTAINER jgasper@unicon.net

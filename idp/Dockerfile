@@ -1,3 +1,4 @@
+# FROM dockerizedidptestbed_idp:latest
 FROM unicon/shibboleth-idp:latest
 
 MAINTAINER Unicon, Inc.
