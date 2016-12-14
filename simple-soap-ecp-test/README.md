@@ -12,9 +12,7 @@ Run below command
 
 ```
 ./test.sh
-```
-
-**NOTES:**  The message `ID` should be unique for every authentication request and `IssueInstant` should be correct time that follows IdP server time. 
+``` 
 
 Troubleshooting
 ---------------
