@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap11:Envelope xmlns:soap11="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+        <samlp:AuthnRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" 
+            AssertionConsumerServiceURL="__AssertionConsumerServiceURL__" 
+            ID="__RANDOM_STRING__" IssueInstant="__NOW__" 
+            ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS" 
+            Version="2.0">
+            <saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">__REMOTE_ENTITYID__</saml:Issuer>
+        </samlp:AuthnRequest>
+    </S:Body>
+</soap11:Envelope>
