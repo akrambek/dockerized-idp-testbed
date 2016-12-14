@@ -8,23 +8,39 @@ Based on original work from http://blogs.kent.ac.uk/unseenit/simple-shibboleth-e
 Usage
 -----
 
-The script defaults to impersonating an Office365 Azure based SP. Override by specifying the EntityID of the SP you wish to impersonate in the ```ENTITYID``` environment variable.
-
-You also need to specify the registered endpoint that the request is pretending to come from. Again, this defaults to the Office365 endpoint. This is the URL specified in the metadata of the SP you’re impersonating for the AssertionConsumerService attribute with binding ```urn:oasis:names:tc:SAML:2.0:bindings:PAOS```. Override with ```ENDPOINT```.
-
-You **MUST** specify a ```URL``` to make the request against. For a Shibboleth IDP this probably looks like ```https://idp.example.com/idp/profile/SAML2/SOAP/ECP```.
-
-Example
--------
-
-*The values for ```ENTITYID``` and ```ENDPOINT``` are the defaults.*
+Run below command
 
 ```
-CRED=user:pass \
-ENTITYID=urn:federation:MicrosoftOnline \
-ENDPOINT=https://login.microsoftonline.com/login.srf \
-URL=https://idp.example.com/idp/profile/SAML2/SOAP/ECP \
-bash test.sh | xmllint --pretty 1 -
+./test.sh
 ```
 
+**NOTES:**  The message `ID` should be unique for every authentication request and `IssueInstant` should be correct time that follows IdP server time. 
+
+Troubleshooting
+---------------
+
+To troubleshoot the error one should look at the docker-compose IdP logs.
+
+1. If the wrong time stamp is sent below error will be thrown.
+
+```
+idp_1          | 2016-12-13 19:27:35,581 - INFO [Shibboleth-Audit.SSO:241] - 20161213T192735Z|urn:oasis:names:tc:SAML:2.0:bindings:SOAP|_b2c92bc8216ff317a5c42d797a7cd8ca16|https://sp.idptestbed/shibboleth|http://shibboleth.net/ns/profiles/saml2/sso/ecp|https://idptestbed/idp/shibboleth||||||||
+idp_1          | 2016-12-13 19:28:02,288 - WARN [org.opensaml.saml.common.binding.security.impl.MessageLifetimeSecurityHandler:152] - Message Handler:  Message was expired: message time was '2016-12-13T12:26:02.193Z', message expired at: '2016-12-13T12:32:02.193Z', current time: '2016-12-13T19:28:02.288Z'
+idp_1          | 2016-12-13 19:28:02,307 - WARN [net.shibboleth.idp.profile.impl.WebFlowMessageHandlerAdaptor:202] - Profile Action WebFlowMessageHandlerAdaptor: Exception handling message
+idp_1          | org.opensaml.messaging.handler.MessageHandlerException: Message was rejected due to issue instant expiration
+idp_1          | 	at org.opensaml.saml.common.binding.security.impl.MessageLifetimeSecurityHandler.doInvoke(MessageLifetimeSecurityHandler.java:155)
+idp_1          | 2016-12-13 19:28:02,322 - WARN [org.opensaml.profile.action.impl.LogEvent:105] - A non-proceed event occurred while processing the request: MessageExpired
+```
+
+To fix the issue you just need to change then `IssueInstant` to for example `2016-12-13T12:32:02.193Z`
+
+2. If the duplicated ID is sent below error will be thrown on the docker-compose IdP logs 
+
+```
+idp_1          | 2016-12-13 18:58:45,365 - INFO [Shibboleth-Audit.SSO:241] - 20161213T185845Z||||http://shibboleth.net/ns/profiles/saml2/sso/ecp|||||||||
+idp_1          | 2016-12-13 18:59:12,946 - WARN [org.opensaml.saml.common.binding.security.impl.MessageReplaySecurityHandler:156] - Message Handler:  Replay detected of message '_96f00291f71ed87ce7a4f2d94edd04101' from issuer 'https://sp.idptestbed/shibboleth'
+idp_1          | 2016-12-13 18:59:12,953 - WARN [net.shibboleth.idp.profile.impl.WebFlowMessageHandlerAdaptor:202] - Profile Action WebFlowMessageHandlerAdaptor: Exception handling message
+idp_1          | org.opensaml.messaging.handler.MessageHandlerException: Rejecting replayed message ID '_96f00291f71ed87ce7a4f2d94edd04101' from issuer https://sp.idptestbed/shibboleth
+idp_1          | 	at org.opensaml.saml.common.binding.security.impl.MessageReplaySecurityHandler.doInvoke(MessageReplaySecurityHandler.java:157
+``` 
 
