@@ -34,6 +34,19 @@ services:
     networks:
      - back
 
+  gateway: 
+    build: ./gateway/ 
+    depends_on: 
+     - idp
+    hostname: gateway.kaazing.test
+    environment:
+      GATEWAY_OPTS: -Dgateway.hostname=gateway.kaazing.test
+    networks:
+     - front
+    ports:
+     - "8000:8000"
+     - "9000:9000"
+
 networks:
   front:
     driver: bridge
